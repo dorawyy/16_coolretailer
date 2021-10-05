@@ -99,7 +99,7 @@
 					<useSystemClassLoader>false</useSystemClassLoader>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!--<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
 				<version>3.0.0-SNAPSHOT</version>
@@ -127,7 +127,7 @@
 						<excludeProperty>git.build.user.*</excludeProperty>
 					</excludeProperties>
 				</configuration>
-			</plugin>
+			</plugin>-->
 			<plugin>
 				<groupId>org.eluder.coveralls</groupId>
 				<artifactId>coveralls-maven-plugin</artifactId>
