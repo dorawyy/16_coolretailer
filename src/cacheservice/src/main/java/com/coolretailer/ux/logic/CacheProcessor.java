@@ -62,22 +62,22 @@ public class CacheProcessor implements ApplicationRunner {
 		ManagedChannel managedChannel = ManagedChannelBuilder
 				.forAddress(gRpcServerName, Integer.parseInt(gRpcServerPort)).usePlaintext()
 				.intercept(clientInterceptorList).build();
-		dataserviceBlockingStub = DataServiceGrpc.newBlockingStub(managedChannel);
-		LOGGER.info("#records: " + getZSetOps().zCard());
+		dataserviceBlockingStub = DataServiceGrpc.newBlockingStub(managedChannel); // call, missing
+		LOGGER.info("#records: " + getZSetOps().zCard()); // call (getZSetOps)
 	}
 
 	@NewSpan
 	public void run(ApplicationArguments args) throws Exception {
 		if (args.containsOption("clear-cache")) {
-			clearCache();
+			clearCache(); // call 
 		}
 
 		if (args.containsOption("process-cache")) {
 			List<String> cacheOptions = args.getOptionValues("process-cache");
 			if (cacheOptions.size() == 1) {
-				processCache(cacheOptions.get(0));
+				processCache(cacheOptions.get(0)); // call 
 			} else {
-				processCache(null);
+				processCache(null); // call
 			}
 			if (args.containsOption("exit")) {
 				Runtime.getRuntime().halt(0);
@@ -89,22 +89,22 @@ public class CacheProcessor implements ApplicationRunner {
 	public List<String> getSuggestions(String searchPrefix) throws Exception {
 
 		// Check in missing list first
-		if (getZSetOpsForMissingProducts().rank(searchPrefix) != null) {
+		if (getZSetOpsForMissingProducts().rank(searchPrefix) != null) { // call
 			return null;
 		}
 
-		Set<String> suggestions = getZSetOps().rangeByLex(Range.range().gte(searchPrefix).lte(searchPrefix + "xff"),
-				Limit.limit().offset(0).count(10));
+		Set<String> suggestions = getZSetOps().rangeByLex(Range.range().gte(searchPrefix).lte(searchPrefix + "xff"), // call 
+				Limit.limit().offset(0).count(10)); // missing
 		// not found in cache
 		if (suggestions.size() == 0) {
 			String queryString = "SELECT name FROM coolretailer.products where LOWER(name) like '"
 					+ searchPrefix.toLowerCase() + "%' LIMIT 10";
 			LOGGER.info("Cache miss :-( hitting BQ..");
-			List<String> results = processQuery(queryString, false);
+			List<String> results = processQuery(queryString, false); // call 
 			// not found in BQ
 			if (CollectionUtils.isEmpty(results)) {
 				LOGGER.info("No results from BQ. Adding to cache as missing product..");
-				getZSetOpsForMissingProducts().add(searchPrefix.toLowerCase(), 0);
+				getZSetOpsForMissingProducts().add(searchPrefix.toLowerCase(), 0); // call
 			}
 			return results;
 		}
@@ -128,7 +128,7 @@ public class CacheProcessor implements ApplicationRunner {
 			qb.append(" LIMIT " + limit);
 
 		}
-		processQuery(qb.toString(), true);
+		processQuery(qb.toString(), true); // call
 
 	}
 
@@ -140,7 +140,7 @@ public class CacheProcessor implements ApplicationRunner {
 
 	@NewSpan
 	public List<String> processQuery(String queryString, boolean updateCache) throws Exception {
-		Query query = Query.newBuilder().setQueryString(queryString).build();
+		Query query = Query.newBuilder().setQueryString(queryString).build(); // call, missing 
 		List<String> names = new ArrayList<String>();
 		if (updateCache) {
 			dataserviceBlockingStub.updateCache(query);

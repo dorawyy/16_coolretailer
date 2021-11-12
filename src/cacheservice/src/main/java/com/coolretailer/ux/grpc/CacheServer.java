@@ -33,16 +33,16 @@ public class CacheServer extends CacheServiceImplBase {
     @NewSpan
     @Override
     public void getSuggestions(Query query, StreamObserver<Result> responseObserver) {
-        LOGGER.info("Got prefix: " + query.getQueryString());
+        LOGGER.info("Got prefix: " + query.getQueryString()); // call 
         try {
 
-            List<String> suggestions = cacheProcessor.getSuggestions(query.getQueryString());
+            List<String> suggestions = cacheProcessor.getSuggestions(query.getQueryString()); // call (getSuggestions)
             if (CollectionUtils.isEmpty(suggestions)) {
                 suggestions = new ArrayList<String>();
             }
-            Result.Builder responseBuilder = Result.newBuilder()
-                    .addAllName(suggestions);
-            responseObserver.onNext(responseBuilder.build());
+            Result.Builder responseBuilder = Result.newBuilder()  
+                    .addAllName(suggestions); 
+            responseObserver.onNext(responseBuilder.build()); 
             responseObserver.onCompleted();
         } catch (Exception e) {
             LOGGER.error("Exception: " + e);
@@ -52,10 +52,10 @@ public class CacheServer extends CacheServiceImplBase {
     @NewSpan
     @Override
     public void processCache(Limit limit, StreamObserver<Empty> responseObserver) {
-        LOGGER.info("Loading " + limit.getLimit() + " items to cache...");
+        LOGGER.info("Loading " + limit.getLimit() + " items to cache..."); // call, missing
         try {
-            cacheProcessor.processCache(String.valueOf(limit.getLimit()));
-            responseObserver.onNext(Empty.newBuilder().build());
+            cacheProcessor.processCache(String.valueOf(limit.getLimit())); // call (processCache) // call, missing
+            responseObserver.onNext(Empty.newBuilder().build()); // call, missing (Empty)
             responseObserver.onCompleted();
         } catch (Exception e) {
             LOGGER.error("Exception: " + e);
@@ -67,8 +67,8 @@ public class CacheServer extends CacheServiceImplBase {
     public void clearCache(Empty empty, StreamObserver<Empty> responseObserver) {
         LOGGER.info("Clearing cache: ");
         try {
-            cacheProcessor.clearCache();
-            responseObserver.onNext(Empty.newBuilder().build());
+            cacheProcessor.clearCache(); // call
+            responseObserver.onNext(Empty.newBuilder().build()); // call, missing
             responseObserver.onCompleted();
         } catch (Exception e) {
             LOGGER.error("Exception: " + e);

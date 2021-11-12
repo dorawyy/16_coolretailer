@@ -76,10 +76,10 @@ public class BQProcessor implements QueryProcessor {
 							? row.get(1).getStringValue().replaceAll(filter, "").trim()
 							: "";
 					if (!updateCache) {
-						Product product = new Product();
-						product.setSku(row.get(0).getValue().toString());
+						Product product = new Product(); // call 
+						product.setSku(row.get(0).getValue().toString()); // call
 
-						product.setName(productName);
+						product.setName(productName); // call
 						results.add(t.cast(product));
 					}
 					// query for name
@@ -93,7 +93,7 @@ public class BQProcessor implements QueryProcessor {
 				}
 
 				if (updateCache) {
-					getZSetOps().add(productName.toLowerCase() + ":" + productName, 0);
+					getZSetOps().add(productName.toLowerCase() + ":" + productName, 0); // call
 				}
 				count++;
 			}
@@ -101,7 +101,7 @@ public class BQProcessor implements QueryProcessor {
 			result = result.getNextPage();
 		}
 		if (updateCache) {
-			long actual = getZSetOps().zCard();
+			long actual = getZSetOps().zCard(); // call
 			LOGGER.info("Indexing completed for " + count + " products.");
 			LOGGER.info("Products in cache: " + actual);
 			LOGGER.info("Duplicate product names: " + (count - actual));

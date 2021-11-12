@@ -60,11 +60,11 @@ public class QueryService {
 		if (prefix.length() < 2) {
 			return "";
 		}
-		processHeaders(request, response);
+		processHeaders(request, response); // call 
 
 		String filter = "[^A-Za-z0-9 ()-]";
 		LOGGER.info("Fetch suggestions for: " + prefix);
-		List<String> suggestions = queryProcessor.getSuggestions(prefix.replaceAll(filter, "").toLowerCase());
+		List<String> suggestions = queryProcessor.getSuggestions(prefix.replaceAll(filter, "").toLowerCase()); // call
 		if (!CollectionUtils.isEmpty(suggestions)) {
 			LOGGER.info("Found " + suggestions.toString());
 			return (new Gson().toJson(suggestions));
@@ -75,13 +75,13 @@ public class QueryService {
 
 	private void processHeaders(HttpServletRequest request, HttpServletResponse response) {
 
-		getB3Headers().keySet().forEach(header -> {
+		getB3Headers().keySet().forEach(header -> { // call
 			if (request.getHeader(header) != null) {
 				// copy existing header
 				response.setHeader(header, request.getHeader(header));
 			} else {
 				// set missing header
-				response.setHeader(header, getB3Headers().get(header));
+				response.setHeader(header, getB3Headers().get(header)); // call (in lambda)
 			}
 		});
 

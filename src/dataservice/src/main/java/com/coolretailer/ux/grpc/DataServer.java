@@ -31,8 +31,8 @@ public class DataServer extends DataServiceImplBase {
     public void runQuery(Query query, StreamObserver<Result> responseObserver) {
         LOGGER.info("Got query: " + query);
         try {
-            Result.Builder responseBuilder = Result.newBuilder()
-                    .addAllName(bqProcessor.processQuery(query.getQueryString(), String.class, false));
+            Result.Builder responseBuilder = Result.newBuilder() // call, missing
+                    .addAllName(bqProcessor.processQuery(query.getQueryString(), String.class, false)); // call (processQuery) // call, missing (getQueryString)
             responseObserver.onNext(responseBuilder.build());
             responseObserver.onCompleted();
         } catch (Exception e) {
@@ -45,8 +45,8 @@ public class DataServer extends DataServiceImplBase {
     public void updateCache(Query query, StreamObserver<Result> responseObserver) {
         LOGGER.info("Got query: " + query);
         try {
-            Result.Builder responseBuilder = Result.newBuilder()
-                    .addAllName(bqProcessor.processQuery(query.getQueryString(), String.class, true));
+            Result.Builder responseBuilder = Result.newBuilder() // call, missing
+                    .addAllName(bqProcessor.processQuery(query.getQueryString(), String.class, true)); // call // call, missing (getQueryString)
             responseObserver.onNext(responseBuilder.build());
             responseObserver.onCompleted();
         } catch (Exception e) {
